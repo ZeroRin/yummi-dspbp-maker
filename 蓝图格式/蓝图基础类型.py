@@ -1,6 +1,5 @@
-from dataclasses import dataclass
-from dataclasses import fields
-from typing import Annotated, get_origin, get_args, Type, Any
+from dataclasses import dataclass, fields
+from typing import Annotated, Any, Type, get_args, get_origin
 
 
 class _字典转换器:
@@ -31,10 +30,11 @@ class _字典转换器:
         return 目标类(**cls.收集字段数据(目标类, 源字典))
 
 
-@dataclass
 class 蓝图基类:
     def 转json(self):
-        raise NotImplementedError(f"谢谢你，这个算虚基类方法，请重写方法。类名：{self.__class__}")
+        raise NotImplementedError(
+            f"谢谢你，这个算虚基类方法，请重写方法。类名：{self.__class__}"
+        )
 
     @classmethod
     def 由json转换(cls, 数据字典: dict):
@@ -46,13 +46,16 @@ class 蓝图dataclass基类(蓝图基类):
     def 转json(self):
         结果 = {}
         for field in fields(self):
-            if field.name.startswith('_'):  # 跳过私有字段
+            if field.name.startswith("_"):  # 跳过私有字段
                 continue
             value = getattr(self, field.name)
             if issubclass(type(value), 蓝图基类):
                 结果[field.name] = value.转json()
             elif isinstance(value, list):
-                结果[field.name] = [item.转json() if isinstance(item, 蓝图基类) else item for item in value]
+                结果[field.name] = [
+                    item.转json() if isinstance(item, 蓝图基类) else item
+                    for item in value
+                ]
             else:
                 结果[field.name] = value
         return 结果

@@ -207,8 +207,6 @@ class 额外参数之制造类建筑(额外参数):
 
 # 塔
 class BpEnumMixIn(蓝图基类):
-    def __init__(self, *args, **kwargs):
-        super().__init__()
 
     def 转json(self):
         return self.name
@@ -216,11 +214,6 @@ class BpEnumMixIn(蓝图基类):
     @classmethod
     def 由json转换(cls, name):
         return cls[name]
-
-    def __repr__(self):
-        return Enum.__repr__(self)
-
-    __eq__ = Enum.__eq__
 
 
 class Role(BpEnumMixIn, Enum):
